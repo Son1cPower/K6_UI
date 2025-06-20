@@ -5,6 +5,7 @@ import { readRandomUserFromData } from "../utils/data-loader.js";
 import { group, sleep } from "k6";
 import config from "../config/settings.js";
 import { handleError, generateRandomString } from '../utils/helpers.js';
+import { uuidv4 } from 'https://jslib.k6.io/k6-utils/1.4.0/index.js';
 
 
 
@@ -63,6 +64,23 @@ const requestConfigWithTag = ({ name, extraHeaders = {}, query = {} }) => ({
   },
 });
   
+// const requestConfigWithTag = ({ name, extraHeaders = {}, query = {} }, accessToken) => ({
+//   name,  
+//   headers: {
+//     "X-API-Key": config.API_KEY,
+//     "Origin": config.ORIGIN,
+//     "Cookie": `folioAccessToken=${data.accessToken}`,
+//     ...extraHeaders,
+//   },
+//   query,
+//   tags: {
+//     service: 'PrivateRatings', 
+//   },
+// });
+
+
+
+
   group("01. Create User", function () {
      let res =get(`${config.BASE_URL}/groups`, requestConfigWithTag({
      name: 'Get patronGroup_id',
@@ -85,13 +103,68 @@ const requestConfigWithTag = ({ name, extraHeaders = {}, query = {} }) => ({
         "username":`CL_user_Name_${randomStrForBody}`,
         "type":"patron","preferredEmailCommunication":[],
         "barcode":`CL_user_barcode_${randomStrForBody}`,"patronGroup":`${patronGroup_id}`,"departments":[]},
-      requestConfigWithTag({
+     
+        requestConfigWithTag({
         name: 'Create User',
         extraHeaders: { "X-Okapi-Tenant": config.TENANT_SECURE },
     })); 
 
     handleError(res, 201);
     const user_id =  JSON.parse(res.body).id;
+    const user_barcode =  JSON.parse(res.body).barcode;
+    sleep(1);
+ 
+
+  res = post(`${config.BASE_URL}/request-preference-storage/request-preference`, 
+      {"userId":`${user_id}`,"fulfillment":"Hold Shelf","holdShelf":true,
+        "delivery":false,"defaultServicePointId":null,"defaultDeliveryAddressTypeId":null
+      },
+        requestConfigWithTag({
+        name: 'Create User',
+        extraHeaders: { "X-Okapi-Tenant": config.TENANT_SECURE },
+    })); 
+
+    handleError(res, 201);
     sleep(1);
   });
-}
+
+ group("02. Create Instance", function () {
+     let res =get(`${config.BASE_URL}/instance-types`, requestConfigWithTag({
+     name: 'Get instanceTypes_id',
+     extraHeaders: { "X-Okapi-Tenant": config.TENANT_CENTRAL },
+      query: {
+        "cql.allRecords": "1",
+        "limit": "2000"
+     }
+  }));
+
+    const instanceTypes_id =  JSON.parse(res.body).instanceTypes?.[0]?.id;
+    console.log(`instanceTypes_id: ${instanceTypes_id}`);
+    sleep(1);
+ 
+   const instance_UUID = uuidv4();
+    res = post(`${config.BASE_URL}/inventory/instances`, 
+
+      {"discoverySuppress":false,"staffSuppress":false,"previouslyHeld":false,"source":"FOLIO",
+      "title":`CL_instance_${generateRandomString(20)}`,
+      "instanceTypeId":`${instanceTypes_id}`,
+        "precedingTitles":[],"succeedingTitles":[],"parentInstances":[],"childInstances":[],
+        "id": `${instance_UUID}`},
+     
+      requestConfigWithTag({
+        name: 'Create Instance',
+        extraHeaders: { "X-Okapi-Tenant": config.TENANT_CENTRAL },
+    }),
+
+
+    { checkBodyLength: false }
+  
+  ); 
+
+    handleError(res, 201);
+    sleep(1);
+  });
+ };
+
+
+
