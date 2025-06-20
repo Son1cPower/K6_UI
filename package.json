@@ -1,0 +1,27 @@
+{
+  "name": "k6",
+  "version": "1.0.0",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+     "k6:test": "k6 run -e ENVIRONMENT=qa tests/login.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@babel/core": "^7.26.10",
+    "@babel/preset-env": "^7.26.9",
+    "@types/k6": "^1.0.2",
+    "babel-loader": "^10.0.0",
+    "core-js": "^3.41.0",
+    "webpack": "^5.99.3",
+    "webpack-cli": "^6.0.1",
+    "webpack-glob-entries": "^1.0.1"
+  }
+}
