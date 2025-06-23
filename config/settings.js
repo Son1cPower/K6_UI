@@ -30,9 +30,9 @@ const config = envConfig[__ENV.ENVIRONMENT] || envConfig["relctls2"];
 
 export const BASE_URL = config.BASE_URL;
 
-export const CLOUD = {
-  projectID: __ENV.PROJECT_ID || "default_project",
-  name: __ENV.TEST_NAME || "default_test",
-};
+// export const CLOUD = {
+//   projectID: __ENV.PROJECT_ID || "default_project",
+//   name: __ENV.TEST_NAME || "default_test",
+// };
 
 export default config;

@@ -1,6 +1,6 @@
 import { STAGES } from "../config/workloads.js";
 import { THRESHOLD } from "../config/thresholds.js";
-import { get, post, put, del,patch} from "../utils/http-requests.js";
+import { get, post, put, del,patch, batch} from "../utils/http-requests.js";
 import { readRandomUserFromData } from "../utils/data-loader.js";
 import { group, sleep } from "k6";
 import config from "../config/settings.js";
