@@ -8,7 +8,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-     "k6:test": "k6 run -e WORKLOAD=smoke -e ENVIRONMENT=qa tests/login.js"
+    "k6:test:login": "k6 run -e WORKLOAD=smoke -e ENVIRONMENT=relctls2 tests/login.js",
+    "k6:test:mediated": "k6 run -e WORKLOAD=smoke -e ENVIRONMENT=relctls2 tests/mediatedRequest_data_generationt.js"
   },
   "keywords": [],
   "author": "",

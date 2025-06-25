@@ -5,6 +5,7 @@ import { readRandomUserFromData } from "../utils/data-loader.js";
 import { group, sleep } from "k6";
 import config from "../config/settings.js";
 import { handleError } from '../utils/helpers.js';
+import { extractField } from '../utils/extractField.js';
 
 
 
@@ -15,9 +16,9 @@ export const options = {
 
 const body = readRandomUserFromData("users");
 
-export default function () {
-  group("Login", function () {
-    let res = post(`${config.BASE_URL}/authn/login-with-expiry`, body, {
+export function login() {
+    const loginBody = readRandomUserFromData("users");
+    let res = post(`${config.BASE_URL}/authn/login-with-expiry`, loginBody, {
       headers: {
         "X-API-Key": config.API_KEY,
         "Origin": config.ORIGIN,
@@ -26,11 +27,10 @@ export default function () {
     });
     
     handleError(res, 201);
-    const accessToken = res.cookies.folioAccessToken?.[0]?.value;
-    const refreshToken = res.cookies.folioRefreshToken?.[0]?.value;
-    sleep(1);
+    
+    const accessToken = extractField(res.cookies, 'folioAccessToken[1].value');
+    const refreshToken = extractField(res.cookies, 'folioRefreshToken[1].value');
 
- 
     res = get(`${config.BASE_URL}/bl-users/_self`, {
       headers: {
         "X-API-Key": config.API_KEY,
@@ -39,7 +39,7 @@ export default function () {
         "Cookie": `folioAccessToken=${accessToken}`
       },
     }); 
-
+    
     sleep(1);
-  });
+    return { accessToken, refreshToken };
 }
