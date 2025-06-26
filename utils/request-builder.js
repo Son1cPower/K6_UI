@@ -41,10 +41,16 @@ function buildRequestParams({
 }
 
 export function buildParamFactory(staticParams = {}) {
-  return (dynamicParams = {}) => buildRequestParams({
-    ...staticParams,
-    ...dynamicParams
-  });
+  return (dynamicParams = {}) => {
+    return buildRequestParams({
+      ...staticParams,
+      ...dynamicParams,
+      headers: {
+        ...(staticParams.headers || {}),
+        ...(dynamicParams.headers || {})
+      }
+    });
+  };
 }
 
 
