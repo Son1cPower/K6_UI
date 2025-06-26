@@ -1,15 +1,17 @@
 import { STAGES } from "../config/workloads.js";
 import { THRESHOLD } from "../config/thresholds.js";
 import { get, post, put, del,patch, batch} from "../utils/http-requests.js";
-import { readRandomUserFromData } from "../utils/data-loader.js";
+
 import { group, sleep } from "k6";
 import config from "../config/settings.js";
 import { handleError, generateRandomString } from '../utils/helpers.js';
-import { uuidv4 } from 'https://jslib.k6.io/k6-utils/1.4.0/index.js';
+
 import { extractField } from '../utils/extractField.js';
-import { login } from './login.js';
+
 import { loginAsAdmin } from '../tests/web/steps/loginAsAdmin.js';
 import { createPatronUser } from '../tests/web/steps/createPatronUser.js';
+import { createInstance } from '../tests/web/steps/createInstance.js';
+
 
 export const options = {
   stages: STAGES.smoke,
@@ -64,7 +66,7 @@ const requestConfigWithTag = ({ name, extraHeaders = {}, query = {} }) => ({
 
 
  
-  let instance_UUID;
+  // let instance_UUID;
   let holdings_id;
 
 
@@ -75,41 +77,12 @@ const requestConfigWithTag = ({ name, extraHeaders = {}, query = {} }) => ({
   group("01. Create User", function () {
 
   const user = createPatronUser(data);
-
+ sleep(1);
   });// Group 01 close 
 
   // Group 02 Start 
  group("02. Create Instance", function () {
-     let res =get(`${config.BASE_URL}/instance-types`, requestConfigWithTag({
-     name: 'Get instanceTypes_id',
-     extraHeaders: { "X-Okapi-Tenant": config.TENANT_CENTRAL },
-      query: {
-        "cql.allRecords": "1",
-        "limit": "2000"
-     }
-  }));
-
-    // const instanceTypes_id =  JSON.parse(res.body).instanceTypes?.[0]?.id;
-    const instanceTypes_id = extractField(res, 'instanceTypes[0].id');
-    sleep(1);
- 
-    instance_UUID = uuidv4();
-    res = post(`${config.BASE_URL}/inventory/instances`, 
-
-      {"discoverySuppress":false,"staffSuppress":false,"previouslyHeld":false,"source":"FOLIO",
-      "title":`CL_instance_${generateRandomString(50)}`,
-      "instanceTypeId":`${instanceTypes_id}`,
-        "precedingTitles":[],"succeedingTitles":[],"parentInstances":[],"childInstances":[],
-        "id": `${instance_UUID}`},
-     
-      requestConfigWithTag({
-        name: 'Create Instance',
-        extraHeaders: { "X-Okapi-Tenant": config.TENANT_CENTRAL }
-     }),
-    { checkBodyLength: false }
-    ); 
-
-    handleError(res, 201);
+     const instance= createInstance(data);
     sleep(1);
   }),// Group 02 close 
 

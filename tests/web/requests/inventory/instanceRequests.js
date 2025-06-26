@@ -1,10 +1,10 @@
 import { get, post } from "../../../../utils/http-requests.js";
 import config from "../../../../config/settings.js";
 
-export function getInstanceTypes(headers, query = {}) {
-  return get(`${config.BASE_URL}/instance-types`, { headers, query });
+export function getInstanceTypes(paramsWithOptions) {
+  return get(`${config.BASE_URL}/instance-types`, paramsWithOptions);
 }
 
-export function createInstance(body, headers) {
-  return post(`${config.BASE_URL}/inventory/instances`, body, { headers });
+export function createNewInstance(body, paramsWithOptions) {
+  return post(`${config.BASE_URL}/inventory/instances`, body, paramsWithOptions);
 }
