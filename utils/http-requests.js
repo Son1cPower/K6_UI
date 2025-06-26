@@ -1,5 +1,3 @@
-  // { method: 'post', url: '...', body: {...}, params: {}, options: {} }
-
 import http from 'k6/http';
 import { check } from 'k6';
 
@@ -12,26 +10,31 @@ const DEFAULT_HEADERS = {
 // Default timeout in milliseconds
 const DEFAULT_TIMEOUT = 30000;
 
-function mergeParams(params = {}) {
+function mergeParams(all = {}) {
+  const {
+    query,
+    headers = {},
+    timeout = DEFAULT_TIMEOUT,
+    ...rest
+  } = all;
+
   return {
-    timeout: DEFAULT_TIMEOUT,
-    ...params,
+    ...rest,
+    timeout,
     headers: {
       ...DEFAULT_HEADERS,
-      ...params.headers
+      ...headers
     },
-    params: params.query ? { query: params.query } : undefined
+    params: query ? { query } : undefined
   };
 }
 
-function processResponse(response, options = {}) {
-  const {
-    validateStatus = true,
-    checkBodyLength = true,
-    name = 'HTTP Request',
-    tags = {}
-  } = options;
-
+function processResponse(response, {
+  validateStatus = true,
+  checkBodyLength = true,
+  name = 'HTTP Request',
+  tags = {}
+} = {}) {
   if (validateStatus) {
     check(response, {
       [`${name} status is 2xx`]: (r) => r.status >= 200 && r.status < 300,
@@ -47,89 +50,93 @@ function processResponse(response, options = {}) {
   return response;
 }
 
-function prepareBody(body, params = {}) {
+function prepareBody(body, all = {}) {
   if (typeof body === 'string') return body;
-  if (params.headers && params.headers['Content-Type'] === 'application/x-www-form-urlencoded') {
+  if (all.headers && all.headers['Content-Type'] === 'application/x-www-form-urlencoded') {
     return body;
   }
   return JSON.stringify(body);
 }
 
-export function get(url, params = {}, options = {}) {
-  const tags = options.tags || params.tags || {};
-  const name = options.name || params.name || `GET ${url}`;
-  const mergedParams = { ...mergeParams(params), tags };
+function extractMeta(all = {}, method, url) {
+  return {
+    name: all.name || `${method.toUpperCase()} ${url}`,
+    tags: all.tags || {}
+  };
+}
+
+export function get(url, all = {}) {
+  const { name, tags } = extractMeta(all, 'GET', url);
+  const mergedParams = { ...mergeParams(all), tags };
 
   return processResponse(
     http.get(url, mergedParams),
-    { ...options, name, tags }
+    { ...all, name, tags }
   );
 }
 
-export function post(url, body, params = {}, options = {}) {
-  const tags = options.tags || params.tags || {};
-  const name = options.name || params.name || `POST ${url}`;
-  const mergedParams = { ...mergeParams(params), tags };
+export function post(url, body, all = {}) {
+  const { name, tags } = extractMeta(all, 'POST', url);
+  const mergedParams = { ...mergeParams(all), tags };
 
   return processResponse(
-    http.post(url, prepareBody(body, params), mergedParams),
-    { ...options, name, tags }
+    http.post(url, prepareBody(body, all), mergedParams),
+    { ...all, name, tags }
   );
 }
 
-export function put(url, body, params = {}, options = {}) {
-  const tags = options.tags || params.tags || {};
-  const name = options.name || params.name || `PUT ${url}`;
-  const mergedParams = { ...mergeParams(params), tags };
+export function put(url, body, all = {}) {
+  const { name, tags } = extractMeta(all, 'PUT', url);
+  const mergedParams = { ...mergeParams(all), tags };
 
   return processResponse(
-    http.put(url, prepareBody(body, params), mergedParams),
-    { ...options, name, tags }
+    http.put(url, prepareBody(body, all), mergedParams),
+    { ...all, name, tags }
   );
 }
 
-export function del(url, params = {}, options = {}) {
-  const tags = options.tags || params.tags || {};
-  const name = options.name || params.name || `DELETE ${url}`;
-  const mergedParams = { ...mergeParams(params), tags };
+export function del(url, all = {}) {
+  const { name, tags } = extractMeta(all, 'DELETE', url);
+  const mergedParams = { ...mergeParams(all), tags };
 
   return processResponse(
     http.del(url, mergedParams),
-    { ...options, name, tags }
+    { ...all, name, tags }
   );
 }
 
-export function patch(url, body, params = {}, options = {}) {
-  const tags = options.tags || params.tags || {};
-  const name = options.name || params.name || `PATCH ${url}`;
-  const mergedParams = { ...mergeParams(params), tags };
+export function patch(url, body, all = {}) {
+  const { name, tags } = extractMeta(all, 'PATCH', url);
+  const mergedParams = { ...mergeParams(all), tags };
 
   return processResponse(
-    http.patch(url, prepareBody(body, params), mergedParams),
-    { ...options, name, tags }
+    http.patch(url, prepareBody(body, all), mergedParams),
+    { ...all, name, tags }
   );
 }
 
 export function batch(requests = []) {
   const responses = {};
   requests.forEach(req => {
-    const { method, url, body, params, options } = req;
+    const { method, url, body, params } = req;
+    const key = req.tag || url;
+
     switch (method.toLowerCase()) {
       case 'get':
-        responses[req.tag || url] = get(url, params, options);
+        responses[key] = get(url, params);
         break;
       case 'post':
-        responses[req.tag || url] = post(url, body, params, options);
+        responses[key] = post(url, body, params);
         break;
       case 'put':
-        responses[req.tag || url] = put(url, body, params, options);
+        responses[key] = put(url, body, params);
         break;
       case 'del':
       case 'delete':
-        responses[req.tag || url] = del(url, params, options);
+        responses[key] = del(url, params);
         break;
       case 'patch':
-        responses[req.tag || url] = patch(url, body, params, options);
+        responses[key] = patch(url, body, params);
         break;
       default:
         throw new Error(`Unsupported method: ${method}`);
@@ -137,11 +144,3 @@ export function batch(requests = []) {
   });
   return responses;
 }
-
-
-
-// batch example
-// const headers = getAuthHeaders(token);
-// const responses = batch([
-//   { method: 'get', url: url1, params: { headers }, options: { name: 'First' }},
-//   { method: 'post', url: url2, body: {...}, params: { headers }, options: { name: 'Second' }}

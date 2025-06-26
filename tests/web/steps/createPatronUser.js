@@ -77,7 +77,5 @@ export function createPatronUser(data) {
 
   res = createRequestPreference(prefBody,prefParams);
   handleError(res, 201);
-
-
   return { userId };
 }

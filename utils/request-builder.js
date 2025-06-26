@@ -9,23 +9,42 @@ const DEFAULT_HEADERS = {
 
 function buildRequestParams({
   accessToken,
-    // tenant,
   query = {},
   tags = {},
   headers = {},
   timeout = 30000,
+  checkBodyLength = true,
+  validateStatus = true,
+  name = ''
 } = {}) {
+  const allHeaders = {
+    ...DEFAULT_HEADERS,
+    ...headers,
+  };
+
+  if (accessToken) {
+    allHeaders['Cookie'] = `folioAccessToken=${accessToken}`;
+  }
+
   return {
     timeout,
-    headers: {
-      ...DEFAULT_HEADERS,
-    // "X-Okapi-Tenant": tenant,
-      'Cookie': `folioAccessToken=${accessToken}`,
-      ...headers,
-    },
     query,
+    headers: allHeaders,
     tags,
+    options: {
+      checkBodyLength,
+      validateStatus,
+      name,
+      tags,
+    }
   };
+}
+
+export function buildParamFactory(staticParams = {}) {
+  return (dynamicParams = {}) => buildRequestParams({
+    ...staticParams,
+    ...dynamicParams
+  });
 }
 
 
@@ -60,15 +79,3 @@ const EXAMPLE = buildRequestParams({
   // Disable status 2xx check (default: true)
   validateStatus: false
 });
-
-
-
-
-
-export function buildParamFactory({ accessToken }) {
-  return (params = {}) =>
-    buildRequestParams({
-      accessToken,
-      ...params,
-    });
-}
