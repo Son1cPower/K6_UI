@@ -11,7 +11,7 @@ import { extractField } from '../utils/extractField.js';
 import { loginAsAdmin } from '../tests/web/steps/loginAsAdmin.js';
 import { createPatronUser } from '../tests/web/steps/createPatronUser.js';
 import { createInstance } from '../tests/web/steps/createInstance.js';
-
+import { createHolding } from '../tests/web/steps/createHolding.js';
 
 export const options = {
   stages: STAGES.smoke,
@@ -67,7 +67,7 @@ const requestConfigWithTag = ({ name, extraHeaders = {}, query = {} }) => ({
 
  
   // let instance_UUID;
-  let holdings_id;
+  // let holdings_id;
 
 
 
@@ -88,52 +88,8 @@ const requestConfigWithTag = ({ name, extraHeaders = {}, query = {} }) => ({
 
   // Group 03 Start 
   group("03. Create Holdings", function () {
-
-let res =get(`${config.BASE_URL}/locations`,
-     requestConfigWithTag({
-     name: 'Get permanentLocation_id',
-     extraHeaders: { "X-Okapi-Tenant": config.TENANT_MEMBER },
-      query: {
-        "cql.allRecords": "1",
-        "limit": "2000"
-     }
-  }));
-
-    const permanentLocation_name = 'alex'
-    const permanentLocation_id = extractField(res, `locations[?name=${permanentLocation_name}].id`);
-    sleep(1);
-
-
- res =get(`${config.BASE_URL}/holdings-sources`,
-     requestConfigWithTag({
-     name: 'Get holdingsRecordsSources_id',
-     extraHeaders: { "X-Okapi-Tenant": config.TENANT_MEMBER },
-      query: {
-        "cql.allRecords": "1",
-        "limit": "2000"
-     }
-  }));
-
-    const holdingsRecordsSources_id_name = 'FOLIO'
-    const holdingsRecordsSources_id = extractField(res, `holdingsRecordsSources[?name=${holdingsRecordsSources_id_name}].id`);
-    sleep(1);
-
-
-    res = post(`${config.BASE_URL}/holdings-storage/holdings`, 
-
-      {"instanceId":`${instance_UUID}`,"sourceId":`${holdingsRecordsSources_id}`,
-      "permanentLocationId":`${permanentLocation_id}`},
-     
-      requestConfigWithTag({
-        name: 'Create Holdings',
-        extraHeaders: { "X-Okapi-Tenant": config.TENANT_MEMBER }
-     }),
-    ); 
-
-  holdings_id = extractField(res, 'id');
-    handleError(res, 201);
-    sleep(1);
-
+   const holding = createHolding(data);
+sleep(1);
   }),// Group 03 close 
 
 
