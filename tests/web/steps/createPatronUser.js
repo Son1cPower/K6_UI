@@ -1,7 +1,6 @@
 import { getPatronGroups, createUser, createRequestPreference } from "../requests/user/userRequests.js";
 import { extractField } from "../../../utils/extractField.js";
-import { generateRandomString } from "../../../utils/helpers.js";
-import { handleError } from "../../../utils/helpers.js";
+import { handleError, generateRandomString } from "../../../utils/helpers.js";
 import config from "../../../config/settings.js";
 import { buildParamFactory } from '../../../utils/request-builder.js';
 

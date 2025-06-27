@@ -42,17 +42,14 @@ function buildRequestParams({
   }
 
   return {
-    timeout,
-    query,
-    headers: allHeaders,
-    tags,
-    options: {
-      checkBodyLength,
-      validateStatus,
-      name,
-      tags,
-    }
-  };
+  timeout,
+  query,
+  headers: allHeaders,
+  tags,
+  checkBodyLength,
+  validateStatus,
+  name,
+};
 }
 
 

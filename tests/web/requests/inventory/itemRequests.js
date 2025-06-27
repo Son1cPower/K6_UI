@@ -5,6 +5,6 @@ export function getMaterialTypes(paramsWithOptions) {
   return get(`${config.BASE_URL}/material-types`, paramsWithOptions);
 }
 
-export function createItem(body, paramsWithOptions) {
+export function createNewItem(body, paramsWithOptions) {
   return post(`${config.BASE_URL}/inventory/items`, body, paramsWithOptions);
 }

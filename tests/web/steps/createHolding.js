@@ -1,26 +1,24 @@
 import { getHoldingsSources, createNewHolding } from "../requests/inventory/holdingRequests.js";
 import { getLocations } from "../requests/locations/locationsRequests.js";
 import { extractField } from "../../../utils/extractField.js";
-import { generateRandomString } from "../../../utils/helpers.js";
 import { handleError } from "../../../utils/helpers.js";
 import config from "../../../config/settings.js";
 import { buildParamFactory } from '../../../utils/request-builder.js';
 
 
-export function createHolding(data) {
+export function createHolding(data, instance_UUID) {
   
     
   const requestParams = buildParamFactory({
   accessToken: data.accessToken,
-   headers: { "X-Okapi-Tenant": config.TENANT_CENTRAL }
+   headers: { "X-Okapi-Tenant": config.TENANT_MEMBER }
 });
  
 // ========== STEP 1: Get Location ==========  
 
 let res =getLocations(requestParams({
     tags: { name: "Get permanentLocation_id" },
-     headers: { "X-Okapi-Tenant": config.TENANT_MEMBER },
-      query: {
+        query: {
         "cql.allRecords": "1",
         "limit": "2000"
      }
@@ -34,8 +32,7 @@ let res =getLocations(requestParams({
  res =getHoldingsSources(
      requestParams({
           tags: { name: "Get holdingsRecordsSources_id" },
-     headers: { "X-Okapi-Tenant": config.TENANT_MEMBER },
-      query: {
+          query: {
         "cql.allRecords": "1",
         "limit": "2000"
      }
@@ -50,14 +47,13 @@ let res =getLocations(requestParams({
       {"instanceId":`${instance_UUID}`,"sourceId":`${holdingsRecordsSources_id}`,
       "permanentLocationId":`${permanentLocation_id}`},
          requestParams({
-        tags: { name: "Create Holdings" },
-        extraHeaders: { "X-Okapi-Tenant": config.TENANT_MEMBER }
+        tags: { name: "Create Holding" }      
      }),
     ); 
     handleError(res, 201);
-  holdings_id = extractField(res, 'id');
+  const holding_id = extractField(res, 'id');
 
-    return { holdings_id }
+    return { holding_id }
 }
 
 
