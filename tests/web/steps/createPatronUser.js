@@ -9,7 +9,10 @@ export function createPatronUser(data) {
   const flowPrefix = "CL";
   const randomStr = generateRandomString(50);
   const requestParams = buildParamFactory({
-  accessToken: data.accessToken
+  accessToken: data.accessToken,
+   headers: {
+    "X-Okapi-Tenant": config.TENANT_CENTRAL
+  }
 });
 
 
@@ -20,9 +23,6 @@ export function createPatronUser(data) {
       "cql.allRecords": "1",
       "limit": "2000"
     },
-     headers: {
-    "X-Okapi-Tenant": config.TENANT_CENTRAL
-  },
     tags: { name: "Get Patron Groups" }
   });
 
@@ -47,9 +47,6 @@ export function createPatronUser(data) {
   };
 
     const userParams = requestParams({
-     headers: {
-    "X-Okapi-Tenant": config.TENANT_CENTRAL
-  },
     tags: { name: "Create Patron User" }
   });
 
@@ -68,9 +65,6 @@ export function createPatronUser(data) {
   };
 
    const prefParams = requestParams({
-    headers: {
-    "X-Okapi-Tenant": config.TENANT_CENTRAL
-  },
     tags: { name: "Create Request Preference" }
   });
 

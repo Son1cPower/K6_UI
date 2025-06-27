@@ -55,16 +55,3 @@ let res =getLocations(requestParams({
 
     return { holding_id }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

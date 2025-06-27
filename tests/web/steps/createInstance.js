@@ -7,9 +7,7 @@ import { buildParamFactory } from '../../../utils/request-builder.js';
 import { uuidv4 } from 'https://jslib.k6.io/k6-utils/1.4.0/index.js';
 
 
-
-
-  export function createInstance(data) {
+export function createInstance(data) {
   
   const requestParams = buildParamFactory({
   accessToken: data.accessToken,
@@ -28,7 +26,6 @@ const instance_UUID = uuidv4();
   }));
 
     const instanceTypes_id = extractField(res, 'instanceTypes[0].id');
-
 
 
 // ========== STEP 2: Create Instance ==========  
