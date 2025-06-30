@@ -25,8 +25,8 @@ let res =getLocations(requestParams({
   }));
 
     const permanentLocation_name = 'alex'
-    const permanentLocation_id = extractField(res, `locations[?name=${permanentLocation_name}].id`);
-   
+    // const permanentLocation_id = extractField(res, `locations[?name=${permanentLocation_name}].id`);
+   const permanentLocation_id = extractField(res, `locations[0].id`);
 
 // ========== STEP 2: Get Holding Records Sources ID ==========  
  res =getHoldingsSources(

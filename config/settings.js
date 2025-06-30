@@ -24,8 +24,18 @@ const envConfig = {
     MY_FLAG: true,
     TIMEOUT: 6000,
   },
+   bugfest: {
+    BASE_URL: "https://kong-eureka-bugfest-ramsons-consortium.int.aws.folio.org",
+    ORIGIN: "https://eureka-bugfest-ramsons-consortium.int.aws.folio.org",
+    TENANT_CENTRAL: "cs00000int",
+    TENANT_SECURE: "cs00000int_0013",
+    TENANT_MEMBER: "cs00000int_0002",
+    API_KEY: "eyJzIjoiRFNVNjZzMDFReSIsInQiOiJjczAwMDAwaW50IiwidSI6IkVCU0NPRWRnZSJ9",
+    MY_FLAG: true,
+    TIMEOUT: 6000,
+  },
 };
-const config = envConfig[__ENV.ENVIRONMENT] || envConfig["relctls2"];
+const config = envConfig[__ENV.ENVIRONMENT] || envConfig["bugfest"];
 
 
 export const BASE_URL = config.BASE_URL;

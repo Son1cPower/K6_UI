@@ -23,7 +23,7 @@ export function parseJson(response) {
  *
  * Examples:
  *   extractField(res, 'usergroups[0].id')                          // random group
- *   extractField(res, 'accessToken[1].value')                // 2nd cookie
+ *   extractField(res, 'accessToken[1].value')                // 1st cookie
  *   extractField(res, 'locations[?name=Main Library].id')         // filter by name
  *   extractField(res, 'locations[?name=Main Library&code=MAIN].id') // filter by multiple fields
  */

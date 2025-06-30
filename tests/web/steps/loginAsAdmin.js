@@ -14,7 +14,7 @@ export function loginAsAdmin() {
   }});
 
   // ========== STEP 1: Log In ==========
-  const loginRequestBody = readRandomUserFromData("users");
+  const loginRequestBody = readRandomUserFromData();
   const loginRequestParams = requestParams()
 
   const loginRequestRes = loginRequest(loginRequestBody, loginRequestParams);

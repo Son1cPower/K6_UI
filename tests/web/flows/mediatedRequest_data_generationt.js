@@ -1,12 +1,12 @@
-import { STAGES } from "../config/workloads.js";
-import { THRESHOLD } from "../config/thresholds.js";
-import { get, post, put, del,patch, batch} from "../utils/http-requests.js";
-import { readRandomUserFromData } from "../utils/data-loader.js";
+import { STAGES } from "../../../config/workloads.js";
+import { THRESHOLD } from "../../../config/thresholds.js";
+import { get, post, put, del,patch, batch} from "../../../utils/http-requests.js";
+import { readRandomUserFromData } from "../../../utils/data-loader.js";
 import { group, sleep } from "k6";
-import config from "../config/settings.js";
-import { handleError, generateRandomString } from '../utils/helpers.js';
+import config from "../../../config/settings.js";
+import { handleError, generateRandomString } from '../../../utils/helpers.js';
 import { uuidv4 } from 'https://jslib.k6.io/k6-utils/1.4.0/index.js';
-import { extractField } from '../utils/extractField.js';
+import { extractField } from '../../../utils/extractField.js';
 
 
 export const options = {

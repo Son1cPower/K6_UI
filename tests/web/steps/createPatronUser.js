@@ -28,7 +28,8 @@ export function createPatronUser(data) {
 
 
   let res = getPatronGroups(patronGroupsParams);
-  const patronGroupId = extractField(res, `usergroups[?group=${patronGroupName}].id`);
+  // const patronGroupId = extractField(res, `usergroups[?group=${patronGroupName}].id`);
+  const patronGroupId = extractField(res, `usergroups[0].id`);
 
  // ========== STEP 2: Create User ==========
   const userBody = {

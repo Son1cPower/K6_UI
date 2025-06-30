@@ -1,11 +1,11 @@
-import { STAGES } from "../config/workloads.js";
-import { THRESHOLD } from "../config/thresholds.js";
+import { STAGES } from "../../../config/workloads.js";
+import { THRESHOLD } from "../../../config/thresholds.js";
 import { group, sleep } from "k6";
-import { loginAsAdmin } from '../tests/web/steps/loginAsAdmin.js';
-import { createPatronUser } from '../tests/web/steps/createPatronUser.js';
-import { createInstance } from '../tests/web/steps/createInstance.js';
-import { createHolding } from '../tests/web/steps/createHolding.js';
-import { createItem } from '../tests/web/steps/createItem.js';
+import { loginAsAdmin } from '../steps/loginAsAdmin.js';
+import { createPatronUser } from '../steps/createPatronUser.js';
+import { createInstance } from '../steps/createInstance.js';
+import { createHolding } from '../steps/createHolding.js';
+import { createItem } from '../steps/createItem.js';
 
 export const options = {
   stages: STAGES.smoke,
