@@ -9,7 +9,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "k6:test:login": "k6 run -e WORKLOAD=smoke -e ENVIRONMENT=relctls2 tests/login.js",
-    "k6:test:mediated": "k6 run -e WORKLOAD=smoke -e ENVIRONMENT=relctls2 tests/mediatedRequest_data_generationt.js"
+    "k6:test:mediated": "k6 run -e WORKLOAD=smoke -e ENVIRONMENT=bugfest tests/web/flows/MR_flow.js",
+     "k6:multi": "k6 run tests/web/MR_Login.js --env ENVIRONMENT=bugfest"
+       
   },
   "keywords": [],
   "author": "",
