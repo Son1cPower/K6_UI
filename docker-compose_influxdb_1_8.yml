@@ -5,20 +5,17 @@ networks:
 
 services:
   influxdb:
-    image: influxdb:2.7
+    image: influxdb:1.8
     networks:
       - k6net
     ports:
       - "8086:8086"
     volumes:
-      - influxdb2-data:/var/lib/influxdb2
+      - influxdb-data:/var/lib/influxdb
     environment:
-      - DOCKER_INFLUXDB_INIT_MODE=setup
-      - DOCKER_INFLUXDB_INIT_USERNAME=croco
-      - DOCKER_INFLUXDB_INIT_PASSWORD=password1
-      - DOCKER_INFLUXDB_INIT_ORG=k6io
-      - DOCKER_INFLUXDB_INIT_BUCKET=k6
-      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=my-super-secret-token
+      - INFLUXDB_DB=k6
+      - INFLUXDB_ADMIN_USER=croco
+      - INFLUXDB_ADMIN_PASSWORD=password1
 
   grafana:
     image: grafana/grafana:10.1.1
@@ -39,14 +36,10 @@ services:
     networks:
       - k6net
     environment:
-      - K6_OUT=xk6-influxdb=http://influxdb:8086
-      - K6_INFLUXDB_ORGANIZATION=k6io
-      - K6_INFLUXDB_BUCKET=k6
-      - K6_INFLUXDB_TOKEN=my-super-secret-token
-      - K6_INFLUXDB_INSECURE=true
+      - K6_OUT=influxdb=http://influxdb:8086/k6
     volumes:
       - .:/k6/project
     working_dir: /k6/project
 
 volumes:
-  influxdb2-data:
+  influxdb-data:
