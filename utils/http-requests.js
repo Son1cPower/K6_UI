@@ -1,5 +1,6 @@
 import http from 'k6/http';
 import { check } from 'k6';
+import { epDataSent, epDataRecv } from './networkMetrics.js';
 
 // Shared default headers
 const DEFAULT_HEADERS = {
@@ -65,54 +66,69 @@ function extractMeta(all = {}, method, url) {
   };
 }
 
+// === Network traffic ===
+function sizeOfHeaders(hdrs) {
+  return Object.entries(hdrs || {}).reduce(
+    (sum, [key, value]) => sum + key.length + String(value).length,
+    0
+  );
+}
+
+function trackDataMetricsPerURL(res) {
+  epDataSent.add(sizeOfHeaders(res.request.headers || {}) + (res.request.body?.length || 0), {
+    url: res.url,
+  });
+
+  epDataRecv.add(sizeOfHeaders(res.headers || {}) + (res.body?.length || 0), {
+    url: res.url,
+  });
+}
+
+// === HTTP METHODS ===
+
 export function get(url, all = {}) {
   const { name, tags } = extractMeta(all, 'GET', url);
   const mergedParams = { ...mergeParams(all), tags };
 
-  return processResponse(
-    http.get(url, mergedParams),
-    { ...all, name, tags }
-  );
+  const res = http.get(url, mergedParams);
+  trackDataMetricsPerURL(res);
+  return processResponse(res, { ...all, name, tags });
 }
 
 export function post(url, body, all = {}) {
   const { name, tags } = extractMeta(all, 'POST', url);
   const mergedParams = { ...mergeParams(all), tags };
 
-  return processResponse(
-    http.post(url, prepareBody(body, all), mergedParams),
-    { ...all, name, tags }
-  );
+  const res = http.post(url, prepareBody(body, all), mergedParams);
+  trackDataMetricsPerURL(res);
+  return processResponse(res, { ...all, name, tags });
 }
 
 export function put(url, body, all = {}) {
   const { name, tags } = extractMeta(all, 'PUT', url);
   const mergedParams = { ...mergeParams(all), tags };
 
-  return processResponse(
-    http.put(url, prepareBody(body, all), mergedParams),
-    { ...all, name, tags }
-  );
+  const res = http.put(url, prepareBody(body, all), mergedParams);
+  trackDataMetricsPerURL(res);
+  return processResponse(res, { ...all, name, tags });
 }
 
 export function del(url, all = {}) {
   const { name, tags } = extractMeta(all, 'DELETE', url);
   const mergedParams = { ...mergeParams(all), tags };
 
-  return processResponse(
-    http.del(url, mergedParams),
-    { ...all, name, tags }
-  );
+  const res = http.del(url, mergedParams);
+  trackDataMetricsPerURL(res);
+  return processResponse(res, { ...all, name, tags });
 }
 
 export function patch(url, body, all = {}) {
   const { name, tags } = extractMeta(all, 'PATCH', url);
   const mergedParams = { ...mergeParams(all), tags };
 
-  return processResponse(
-    http.patch(url, prepareBody(body, all), mergedParams),
-    { ...all, name, tags }
-  );
+  const res = http.patch(url, prepareBody(body, all), mergedParams);
+  trackDataMetricsPerURL(res);
+  return processResponse(res, { ...all, name, tags });
 }
 
 export function batch(requests = []) {
