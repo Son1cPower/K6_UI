@@ -865,7 +865,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": ""
+        "uid": "P1D92AD4B6987FA03"
       },
       "description": "",
       "fieldConfig": {
@@ -982,10 +982,7 @@
       "type": "timeseries"
     },
     {
-      "datasource": {
-        "type": "influxdb",
-        "uid": ""
-      },
+      "datasource": {},
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -1166,7 +1163,7 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 12,
+        "w": 24,
         "x": 0,
         "y": 36
       },
@@ -1261,10 +1258,10 @@
         ]
       },
       "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 36
+        "h": 15,
+        "w": 24,
+        "x": 0,
+        "y": 44
       },
       "id": 6,
       "options": {
@@ -1365,7 +1362,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 44
+        "y": 59
       },
       "id": 8,
       "panels": [],
@@ -1475,9 +1472,230 @@
         "h": 15,
         "w": 24,
         "x": 0,
-        "y": 45
+        "y": 60
       },
       "id": 2,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "frameIndex": 3,
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "10.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": ""
+          },
+          "query": "from(bucket: \"k6\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"group_duration\" and r[\"_field\"] == \"value\")   \r\n  |> group(columns: [\"group_name\"])\r\n  |> mean()\r\n  |> group()\r\n  |> rename(columns: {\"_value\": \"Avg\"})\r\n  |> keep(columns: [\"group_name\", \"Avg\"])",
+          "refId": "Average"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": ""
+          },
+          "hide": true,
+          "query": "from(bucket: \"k6\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"group_duration\" and r[\"_field\"] == \"value\")   \r\n  |> group(columns: [\"group_name\"])\r\n  |> count()\r\n  |> group()\r\n  |> rename(columns: {\"_value\": \"Count\"})\r\n  |> keep(columns: [\"group_name\", \"Count\"])",
+          "refId": "Count"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": ""
+          },
+          "hide": false,
+          "query": "from(bucket: \"k6\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"group_duration\" and r[\"_field\"] == \"value\")   \r\n  |> group(columns: [\"group_name\"])\r\n  |> min()\r\n  |> group()\r\n  |> rename(columns: {\"_value\": \"Min\"})\r\n  |> keep(columns: [\"group_name\", \"Min\"])",
+          "refId": "Minimum"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": ""
+          },
+          "hide": false,
+          "query": "from(bucket: \"k6\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"group_duration\" and r[\"_field\"] == \"value\")   \r\n  |> group(columns: [\"group_name\"])\r\n  |> max()\r\n  |> group()\r\n  |> rename(columns: {\"_value\": \"Max\"})\r\n  |> keep(columns: [\"group_name\", \"Max\"])",
+          "refId": "Maximum"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": ""
+          },
+          "hide": false,
+          "query": "from(bucket: \"k6\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"group_duration\" and r[\"_field\"] == \"value\")   \r\n  |> group(columns: [\"group_name\"])\r\n  |> median()\r\n  |> group()\r\n  |> rename(columns: {\"_value\": \"Med\"})\r\n  |> keep(columns: [\"group_name\", \"Med\"])",
+          "refId": "Median"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": ""
+          },
+          "hide": false,
+          "query": "from(bucket: \"k6\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"group_duration\" and r[\"_field\"] == \"value\")   \r\n  |> group(columns: [\"group_name\"])\r\n  |> quantile(q: 0.75)\r\n  |> group()\r\n  |> rename(columns: {\"_value\": \"75%\"})\r\n  |> keep(columns: [\"group_name\", \"75%\"])",
+          "refId": "75%"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": ""
+          },
+          "hide": false,
+          "query": "from(bucket: \"k6\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"group_duration\" and r[\"_field\"] == \"value\")   \r\n  |> group(columns: [\"group_name\"])\r\n  |> quantile(q: 0.90)\r\n  |> group()\r\n  |> rename(columns: {\"_value\": \"90%\"})\r\n  |> keep(columns: [\"group_name\", \"90%\"])",
+          "refId": "90%"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": ""
+          },
+          "hide": false,
+          "query": "from(bucket: \"k6\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"group_duration\" and r[\"_field\"] == \"value\")   \r\n  |> group(columns: [\"group_name\"])\r\n  |> quantile(q: 0.95)\r\n  |> group()\r\n  |> rename(columns: {\"_value\": \"95%\"})\r\n  |> keep(columns: [\"group_name\", \"95%\"])",
+          "refId": "95%"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": ""
+          },
+          "hide": true,
+          "query": "from(bucket: \"k6\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"group_duration\" and r[\"_field\"] == \"value\")   \r\n  |> group(columns: [\"group_name\"])\r\n  |> stddev()\r\n  |> group()\r\n  |> rename(columns: {\"_value\": \"stddev\"})\r\n  |> keep(columns: [\"group_name\", \"stddev\"])",
+          "refId": "Standard deviation"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": ""
+          },
+          "hide": false,
+          "query": "tpsCalculator = () => {\r\ncount = from(bucket: \"k6\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"group_duration\" and r[\"_field\"] == \"value\")\r\n  |> group(columns: [\"group_name\"])\r\n  |> count()\r\n  |> toFloat()\r\n  |> group()\r\n  |> keep(columns: [\"_value\", \"group_name\"])\r\n\r\n integral = from(bucket: \"k6\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"group_duration\" and r[\"_field\"] == \"value\")\r\n  |> group(columns: [\"group_name\"])\r\n  |> integral()\r\n  |> toFloat()\r\n  |> group() \r\n  |> keep(columns: [\"_value\", \"group_name\"])\r\n  \r\n  return join(\r\n      tables:{count:count, integral:integral},\r\n      on:[\"group_name\"]\r\n    )\r\n    |> map(fn:(r) => ({\r\n             group_name: r.group_name,\r\n             TPS: r._value_count / r._value_integral,\r\n             TPM: (r._value_count / r._value_integral) * 60.0,\r\n             TPH: (r._value_count / r._value_integral) * 60.0 * 60.0,        \r\n    }))       \r\n}\r\n\r\ntpsCalculator()",
+          "refId": "TPS"
+        }
+      ],
+      "title": "Summary k6",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P1D92AD4B6987FA03"
+      },
+      "description": "test dashboard (will be changed later) for k6-Grafana integration demo",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": true,
+            "inspect": false,
+            "minWidth": 50
+          },
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TPS"
+            },
+            "properties": [
+              {
+                "id": "unit"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TPM"
+            },
+            "properties": [
+              {
+                "id": "unit"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TPH"
+            },
+            "properties": [
+              {
+                "id": "unit"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "requestName"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 430
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Count"
+            },
+            "properties": [
+              {
+                "id": "unit"
+              },
+              {
+                "id": "decimals"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 15,
+        "w": 24,
+        "x": 0,
+        "y": 75
+      },
+      "id": 41,
       "options": {
         "cellHeight": "sm",
         "footer": {
@@ -1708,8 +1926,8 @@
     ]
   },
   "time": {
-    "from": "2025-07-10T10:16:09.033Z",
-    "to": "2025-07-10T10:17:34.117Z"
+    "from": "2025-07-11T09:53:34.126Z",
+    "to": "2025-07-11T09:53:42.460Z"
   },
   "timepicker": {},
   "timezone": "",
