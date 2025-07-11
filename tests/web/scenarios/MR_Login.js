@@ -1,4 +1,4 @@
-import { setup as setupMrFlow, default as mrFlowFn } from '../flows/MR_flow.js';
+import { setup as setupMrFlow, default as mrFlowFn } from '../flows/MR_flow_2.js';
 import { default as loginFn } from '../flows/login.js';
 
 export const options = {
