@@ -16,3 +16,17 @@ export function generateRandomString(length, chars = 'abcdefghijklmnopqrstuvwxyz
   }
   return result;
 }
+
+
+
+/**
+ * Get current date in format 'yyyy-mm-dd hh:MM:ss'
+ * @returns {string}
+ */
+export function getStartDate(){
+    const date = new Date().toISOString()
+    return date
+        .split("T").join(" ")
+        .replace("Z", "")
+        .substring(0, date.length-5)
+}

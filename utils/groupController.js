@@ -14,7 +14,7 @@ export function groupController(groupName, fn, iterations = 1) {
   const start = Date.now(); // Record the start time of the group
 
   for (let i = 0; i < iterations; i++) {
-    console.log(`Iteration ${i + 1} of group: ${groupName}`); // Logging for debugging purposes
+    // console.log(`Iteration ${i + 1} of group: ${groupName}`); // Logging for debugging purposes
     fn(); // Execute the provided group's logic
   }
 
@@ -22,5 +22,5 @@ export function groupController(groupName, fn, iterations = 1) {
   groupDuration.add(duration, { group_name: groupName }); // Record the total time for the custom metric with the group name as a tag
 
   // Log the total execution time of the group
-  console.log(`Group "${groupName}" executed in ${duration} ms.`);
+  // console.log(`Group "${groupName}" executed in ${duration} ms.`);
 }

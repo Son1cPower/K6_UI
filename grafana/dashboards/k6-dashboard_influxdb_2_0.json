@@ -29,7 +29,7 @@
   "liveNow": false,
   "panels": [
     {
-      "collapsed": true,
+      "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -460,7 +460,7 @@
       },
       "gridPos": {
         "h": 3,
-        "w": 9,
+        "w": 10,
         "x": 14,
         "y": 5
       },
@@ -497,12 +497,155 @@
       "type": "stat"
     },
     {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P1D92AD4B6987FA03"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "reqps"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Response Time (p95) {_start=\"2025-07-11 13:41:20.667 +0000 UTC\", _stop=\"2025-07-11 13:42:08.719 +0000 UTC\", testRunName=\"2025-07-11 13:41:44\"}"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "ms"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "http_reqs"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "reqps"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 8
+      },
+      "id": 42,
+      "interval": "3s",
+      "maxDataPoints": 10000,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "10.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P1D92AD4B6987FA03"
+          },
+          "hide": false,
+          "query": "from(bucket: \"k6\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r._measurement == \"vus\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")",
+          "refId": "Active VUs"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P1D92AD4B6987FA03"
+          },
+          "hide": false,
+          "query": "from(bucket: \"k6\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"http_req_failed\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\r\n  |> group(columns: [\"_measurement\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: sum, createEmpty: false)\r\n  |> yield(name: \"sum\")",
+          "refId": "C"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P1D92AD4B6987FA03"
+          },
+          "hide": false,
+          "query": "from(bucket: \"k6\")\r\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\r\n  |> filter(fn: (r) => r._measurement == \"http_req_duration\")\r\n  |> filter(fn: (r) => r._field == \"value\") \r\n  |> filter(fn: (r) => r.status =~ /[2-4]\\d{2}/)\r\n  |> group(columns: [\"testRunName\"])\r\n  |> aggregateWindow(\r\n        every: 6s,\r\n        fn: (tables=<-, column) => tables\r\n            |> quantile(q: 0.95, method: \"exact_mean\"),\r\n    )\r\n  |> rename(columns: {_value: \"Response Time (p95)\"})",
+          "refId": "D"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P1D92AD4B6987FA03"
+          },
+          "hide": false,
+          "query": "from(bucket: \"k6\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"http_reqs\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\r\n  |> group(columns: [\"_measurement\"])\r\n  |> aggregateWindow(every: 6s, fn: sum, createEmpty: false)\r\n  |> map(fn: (r) => ({r with _value: r._value / 6.0}))\r\n  |> yield(name: \"sum\")",
+          "refId": "E"
+        }
+      ],
+      "title": "VUS",
+      "type": "timeseries"
+    },
+    {
       "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 8
+        "y": 18
       },
       "id": 27,
       "panels": [],
@@ -589,7 +732,7 @@
         "h": 10,
         "w": 8,
         "x": 0,
-        "y": 9
+        "y": 19
       },
       "id": 24,
       "options": {
@@ -713,7 +856,7 @@
         "h": 10,
         "w": 8,
         "x": 8,
-        "y": 9
+        "y": 19
       },
       "id": 25,
       "options": {
@@ -815,7 +958,7 @@
         "h": 10,
         "w": 8,
         "x": 16,
-        "y": 9
+        "y": 19
       },
       "id": 39,
       "options": {
@@ -855,7 +998,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 19
+        "y": 29
       },
       "id": 15,
       "panels": [],
@@ -952,7 +1095,7 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 20
+        "y": 30
       },
       "id": 12,
       "options": {
@@ -1043,7 +1186,7 @@
         "h": 7,
         "w": 24,
         "x": 0,
-        "y": 28
+        "y": 38
       },
       "id": 13,
       "options": {
@@ -1078,7 +1221,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 35
+        "y": 45
       },
       "id": 10,
       "panels": [],
@@ -1165,7 +1308,7 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 36
+        "y": 46
       },
       "id": 40,
       "options": {
@@ -1212,7 +1355,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 44
+        "y": 54
       },
       "id": 8,
       "panels": [],
@@ -1245,8 +1388,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1322,7 +1464,7 @@
         "h": 15,
         "w": 24,
         "x": 0,
-        "y": 45
+        "y": 55
       },
       "id": 2,
       "options": {
@@ -1466,8 +1608,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1555,7 +1696,7 @@
         "h": 15,
         "w": 24,
         "x": 0,
-        "y": 60
+        "y": 70
       },
       "id": 41,
       "options": {
@@ -1698,8 +1839,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1728,7 +1868,7 @@
         "h": 15,
         "w": 24,
         "x": 0,
-        "y": 75
+        "y": 85
       },
       "id": 6,
       "options": {
@@ -1879,6 +2019,7 @@
           }
         ],
         "query": "1,10,30,60,600,1800,3600",
+        "queryValue": "",
         "skipUrlSync": false,
         "type": "custom"
       },
@@ -1908,7 +2049,7 @@
       },
       {
         "current": {
-          "selected": true,
+          "selected": false,
           "text": [
             "All"
           ],
@@ -1934,12 +2075,81 @@
         "skipUrlSync": false,
         "sort": 1,
         "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "Your project name2",
+          "value": "Your project name2"
+        },
+        "datasource": {
+          "type": "influxdb",
+          "uid": "P1D92AD4B6987FA03"
+        },
+        "definition": "import \"influxdata/influxdb/v1\"\r\nv1.tagValues(bucket: \"k6\", tag: \"projectName\")",
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "projectName",
+        "options": [],
+        "query": "import \"influxdata/influxdb/v1\"\r\nv1.tagValues(bucket: \"k6\", tag: \"projectName\")",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "relc-tests/web/scenarios/MR_Login.js",
+          "value": "relc-tests/web/scenarios/MR_Login.js"
+        },
+        "datasource": {
+          "type": "influxdb",
+          "uid": "P1D92AD4B6987FA03"
+        },
+        "definition": "import \"influxdata/influxdb/v1\"\r\nv1.tagValues(bucket: \"k6\", tag: \"testName\")",
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "testName",
+        "options": [],
+        "query": "import \"influxdata/influxdb/v1\"\r\nv1.tagValues(bucket: \"k6\", tag: \"testName\")",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "2025-07-11 15:02:48",
+          "value": "2025-07-11 15:02:48"
+        },
+        "datasource": {
+          "type": "influxdb",
+          "uid": "P1D92AD4B6987FA03"
+        },
+        "definition": "import \"influxdata/influxdb/v1\"\r\nv1.tagValues(bucket: \"k6\", tag: \"testRunName\")",
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "testRunName",
+        "options": [],
+        "query": "import \"influxdata/influxdb/v1\"\r\nv1.tagValues(bucket: \"k6\", tag: \"testRunName\")",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
       }
     ]
   },
   "time": {
-    "from": "2025-07-11T11:56:59.826Z",
-    "to": "2025-07-11T11:57:59.404Z"
+    "from": "2025-07-11T15:02:49.938Z",
+    "to": "2025-07-11T15:03:39.601Z"
   },
   "timepicker": {},
   "timezone": "",

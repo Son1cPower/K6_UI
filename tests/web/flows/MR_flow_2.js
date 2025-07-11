@@ -7,10 +7,18 @@ import { createPatronUser } from '../steps/createPatronUser.js';
 import { createInstance } from '../steps/createInstance.js';
 import { createHolding } from '../steps/createHolding.js';
 import { createItem } from '../steps/createItem.js';
+import { getStartDate } from "../../../utils/helpers.js";
+
 
 export const options = {
   stages: STAGES.smoke,
   thresholds: THRESHOLD,
+  tags: {
+    testid: getStartDate(),
+    projectName: "Your project name",
+    testName: `${__ENV.ENVIRONMENT}-${__ENV.TEST_FILE_NAME}`, 
+    testRunName: getStartDate(),
+  }
 };
 
 
