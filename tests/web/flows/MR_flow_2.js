@@ -27,26 +27,23 @@ let holding;
 
 groupController("01. Create User", function () {
   const user = createPatronUser(data);
- sleep(1);
-  });
-
+   });
+sleep(1);
 
  groupController("02. Create Instance", function () {
      ({instance_UUID: instance }  = createInstance(data));
-    sleep(1);
-  }),
-
+      }),
+sleep(1);
 
   groupController("03. Create Holdings", function () {
   ({ holding_id: holding } = createHolding(data, instance));
-sleep(1);
   }),
-
+sleep(1);
 
  groupController("04. Create Items", function () {
     const item = createItem(data, holding)
-    sleep(1);
-  }) 
+      }) 
+      sleep(1);
  };
 
 

@@ -5,7 +5,7 @@ export function readJsonFromData(relativePath = "users") {
 }
 
 const userData = new SharedArray("users", function () {
-  return readJsonFromData("users_BUGFEST");
+  return readJsonFromData("users_PTF");
 });
 
 export function readRandomUserFromData() {
