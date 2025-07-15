@@ -6,6 +6,9 @@ import { loginAsAdmin } from '../steps/loginAsAdmin.js';
 export const options = {
   stages: STAGES.smoke,
   thresholds: THRESHOLD,
+   tags: {
+    testName: `${__ENV.ENVIRONMENT}-MR_Login`,
+  },
 };
 
 export default function login() {

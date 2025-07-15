@@ -12,6 +12,9 @@ import { extractField } from '../../../utils/extractField.js';
 export const options = {
   stages: STAGES.smoke,
   thresholds: THRESHOLD,
+   tags: {
+    testName: `${__ENV.ENVIRONMENT}-MR_Login`,
+  },
 };
 
 

@@ -10,6 +10,9 @@ import { createItem } from '../steps/createItem.js';
 export const options = {
   stages: STAGES.smoke,
   thresholds: THRESHOLD,
+   tags: {
+    testName: `${__ENV.ENVIRONMENT}-MR_Login`,
+  },
 };
 
 

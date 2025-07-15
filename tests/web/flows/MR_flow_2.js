@@ -13,12 +13,9 @@ import { getStartDate } from "../../../utils/helpers.js";
 export const options = {
   stages: STAGES.smoke,
   thresholds: THRESHOLD,
-  tags: {
-    testid: getStartDate(),
-    projectName: "Your project name",
-    testName: `${__ENV.ENVIRONMENT}-${__ENV.TEST_FILE_NAME}`, 
-    testRunName: getStartDate(),
-  }
+   tags: {
+    testName: `${__ENV.ENVIRONMENT}-MR_Login`,
+  },
 };
 
 
