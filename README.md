@@ -14,5 +14,10 @@ docker compose run --rm -T k6 run -e WORKLOAD=smoke -e ENVIRONMENT=relc -e TEST_
 - docker compose down
 
 
+claud run
+ k6 cloud -e ENVIRONMENT=bugfest -e TEST_FILE_NAME=tests/web/scenarios/MR_Login.js tests/web/scenarios/MR_Login.js
 
- k6 cloud -e ENVIRONMENT=relc -e TEST_FILE_NAME=tests/web/scenarios/MR_Login.js tests/web/scenarios/MR_Login.js
+
+
+
+
