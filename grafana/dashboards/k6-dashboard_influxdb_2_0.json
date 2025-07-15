@@ -1221,7 +1221,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1325,7 +1326,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1438,7 +1440,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1658,7 +1661,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1889,7 +1893,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -2151,7 +2156,7 @@
       },
       {
         "current": {
-          "selected": false,
+          "selected": true,
           "text": "relc-tests/web/scenarios/MR_Login.js",
           "value": "relc-tests/web/scenarios/MR_Login.js"
         },
@@ -2205,6 +2210,6 @@
   "timezone": "",
   "title": "k6 metrics tags",
   "uid": "bd9dc993-69a2-4ce8-9ab8-243880c559d9",
-  "version": 3,
+  "version": 2,
   "weekStart": ""
 }
