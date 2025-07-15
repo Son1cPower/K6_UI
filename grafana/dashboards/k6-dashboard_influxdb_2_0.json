@@ -553,24 +553,76 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "Response Time (p95) {_start=\"2025-07-11 13:41:20.667 +0000 UTC\", _stop=\"2025-07-11 13:42:08.719 +0000 UTC\", testRunName=\"2025-07-11 13:41:44\"}"
+              "options": "Response Time (p95)"
             },
             "properties": [
               {
                 "id": "unit",
                 "value": "ms"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "http_reqs"
+              "options": "Requests per Second"
             },
             "properties": [
               {
                 "id": "unit",
                 "value": "reqps"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "light-blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Active VUs"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "short"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "yellow",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Failed Requests"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "short"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-red",
+                  "mode": "fixed"
+                }
               }
             ]
           }
@@ -605,7 +657,7 @@
             "uid": "P1D92AD4B6987FA03"
           },
           "hide": false,
-          "query": "from(bucket: \"k6\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r._measurement == \"vus\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")",
+          "query": "from(bucket: \"k6\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r._measurement == \"vus\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\r\n  |> set(key: \"legend\", value: \"Active VUs\")              \r\n  |> keep(columns: [\"_time\", \"_value\", \"legend\"])           \r\n  |> group(columns: [\"legend\"])                             \r\n  |> aggregateWindow(every: v.windowPeriod, fn: last)\r\n  |> yield(name: \"Active VUs\")",
           "refId": "Active VUs"
         },
         {
@@ -614,7 +666,7 @@
             "uid": "P1D92AD4B6987FA03"
           },
           "hide": false,
-          "query": "from(bucket: \"k6\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"http_req_failed\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\r\n  |> group(columns: [\"_measurement\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: sum, createEmpty: false)\r\n  |> yield(name: \"sum\")",
+          "query": "from(bucket: \"k6\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"http_req_failed\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\r\n  |> set(key: \"legend\", value: \"Failed Requests\")           // добавляем тег\r\n  |> keep(columns: [\"_time\", \"_value\", \"legend\"])           // убираем всё лишнее\r\n  |> group(columns: [\"legend\"])                             // группируем по тегу legend\r\n  |> aggregateWindow(every: v.windowPeriod, fn: sum, createEmpty: false)\r\n  |> yield(name: \"Failed Requests\")",
           "refId": "C"
         },
         {
@@ -623,7 +675,7 @@
             "uid": "P1D92AD4B6987FA03"
           },
           "hide": false,
-          "query": "from(bucket: \"k6\")\r\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\r\n  |> filter(fn: (r) => r._measurement == \"http_req_duration\")\r\n  |> filter(fn: (r) => r._field == \"value\") \r\n  |> filter(fn: (r) => r.status =~ /[2-4]\\d{2}/)\r\n  |> group(columns: [\"testRunName\"])\r\n  |> aggregateWindow(\r\n        every: 6s,\r\n        fn: (tables=<-, column) => tables\r\n            |> quantile(q: 0.95, method: \"exact_mean\"),\r\n    )\r\n  |> rename(columns: {_value: \"Response Time (p95)\"})",
+          "query": "from(bucket: \"k6\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r._measurement == \"http_req_duration\")\r\n  |> filter(fn: (r) => r._field == \"value\")\r\n  |> group(columns: [\"legend\"])\r\n  |> set(key: \"legend\", value: \"Response Time (p95)\")\r\n  |> aggregateWindow(\r\n        every: v.windowPeriod,\r\n        fn: (tables=<-, column) => tables |> quantile(q: 0.95, method: \"exact_mean\"),\r\n        createEmpty: false\r\n    )\r\n  |> yield(name: \"Response Time (p95)\")",
           "refId": "D"
         },
         {
@@ -632,7 +684,7 @@
             "uid": "P1D92AD4B6987FA03"
           },
           "hide": false,
-          "query": "from(bucket: \"k6\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"http_reqs\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\r\n  |> group(columns: [\"_measurement\"])\r\n  |> aggregateWindow(every: 6s, fn: sum, createEmpty: false)\r\n  |> map(fn: (r) => ({r with _value: r._value / 6.0}))\r\n  |> yield(name: \"sum\")",
+          "query": "from(bucket: \"k6\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"http_reqs\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\r\n  |> aggregateWindow(every: 6s, fn: sum, createEmpty: false)\r\n  |> map(fn: (r) => ({r with _value: r._value / 6.0}))\r\n  |> set(key: \"legend\", value: \"Requests per Second\")\r\n  |> keep(columns: [\"_time\", \"_value\", \"legend\"])\r\n  |> group(columns: [\"legend\"])\r\n  |> yield(name: \"RPS\")",
           "refId": "E"
         }
       ],
@@ -1169,8 +1221,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1274,8 +1325,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1964,7 +2014,7 @@
       "type": "table"
     }
   ],
-  "refresh": false,
+  "refresh": "",
   "schemaVersion": 38,
   "style": "dark",
   "tags": [],
@@ -2049,7 +2099,7 @@
       },
       {
         "current": {
-          "selected": false,
+          "selected": true,
           "text": [
             "All"
           ],
@@ -2155,6 +2205,6 @@
   "timezone": "",
   "title": "k6 metrics tags",
   "uid": "bd9dc993-69a2-4ce8-9ab8-243880c559d9",
-  "version": 1,
+  "version": 3,
   "weekStart": ""
 }
