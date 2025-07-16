@@ -19,8 +19,7 @@ export function createItem(data, holding_id) {
 
    let res =getMaterialTypes(
      requestParams({
-         tags: { name: "Get materialTypes_id" },
-          query: {
+         query: {
         "cql.allRecords": "1",
         "limit": "2000"
      }
@@ -33,7 +32,6 @@ export function createItem(data, holding_id) {
 
       res =getLoanTypes(
      requestParams({
-       tags: { name: "Get loanTypes_id" },
          query: {
         "cql.allRecords": "1",
         "limit": "2000"
@@ -48,9 +46,7 @@ export function createItem(data, holding_id) {
       {"status":{"name":"Available"},"holdingsRecordId":`${holding_id}`,
       "barcode":`CL_Item_Barcode_${generateRandomString(50)}`,
       "materialType":{"id":`${materialTypes_id}`},"permanentLoanType":{"id":`${loanTypes_id}`}},
-      requestParams({
-              tags: { name: "Create Item" },
-            }),
+      requestParams(),
     ); 
 
     const item_id = extractField(res, 'id');

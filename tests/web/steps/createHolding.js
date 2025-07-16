@@ -17,7 +17,7 @@ export function createHolding(data, instance_UUID) {
 // ========== STEP 1: Get Location ==========  
 
 let res =getLocations(requestParams({
-    tags: { name: "Get permanentLocation_id" },
+     tags: { name: "Get permanentLocation_id" },
         query: {
         "cql.allRecords": "1",
         "limit": "2000"
@@ -31,7 +31,6 @@ let res =getLocations(requestParams({
 // ========== STEP 2: Get Holding Records Sources ID ==========  
  res =getHoldingsSources(
      requestParams({
-          tags: { name: "Get holdingsRecordsSources_id" },
           query: {
         "cql.allRecords": "1",
         "limit": "2000"
@@ -46,9 +45,7 @@ let res =getLocations(requestParams({
     res = createNewHolding(
       {"instanceId":`${instance_UUID}`,"sourceId":`${holdingsRecordsSources_id}`,
       "permanentLocationId":`${permanentLocation_id}`},
-         requestParams({
-        tags: { name: "Create Holding" }      
-     }),
+         requestParams(),
     ); 
     handleError(res, 201);
   const holding_id = extractField(res, 'id');

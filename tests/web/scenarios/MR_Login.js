@@ -1,7 +1,9 @@
 import { setup as setupMrFlow, default as mrFlowFn } from '../flows/MR_flow_2.js';
 import { default as loginFn } from '../flows/login.js';
 import { getStartDate } from "../../../utils/helpers.js";
+import { Trend, Gauge } from 'k6/metrics';
 
+export const testDuration = new Gauge('test_duration');
 
 export const options = {
     tags: {
@@ -34,6 +36,7 @@ export const options = {
 
 export function setup() {
   return {
+     testStart: Date.now(),
     mrFlowData: setupMrFlow() 
   };
 }
@@ -46,4 +49,11 @@ export function mrFlow(data) {
 
 export function login() {
   return loginFn();
+}
+
+
+export function teardown(data) {
+  const testEnd = Date.now();
+  const durationSec = (testEnd - data.testStart) / 1000;
+ testDuration.add(durationSec, { testName: `${__ENV.ENVIRONMENT}-MR_Login` });
 }

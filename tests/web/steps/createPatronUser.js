@@ -23,7 +23,6 @@ export function createPatronUser(data) {
       "cql.allRecords": "1",
       "limit": "2000"
     },
-    tags: { name: "Get Patron Groups" }
   });
 
 
@@ -47,11 +46,8 @@ export function createPatronUser(data) {
     departments: [],
   };
 
-    const userParams = requestParams({
-    tags: { name: "Create Patron User" }
-  });
-
-  res = createUser(userBody, userParams);
+  
+  res = createUser(userBody, requestParams());
   handleError(res, 201);
   const userId = extractField(res, "id");
  
@@ -65,11 +61,7 @@ export function createPatronUser(data) {
     defaultDeliveryAddressTypeId: null,
   };
 
-   const prefParams = requestParams({
-    tags: { name: "Create Request Preference" }
-  });
-
-  res = createRequestPreference(prefBody,prefParams);
+  res = createRequestPreference(prefBody,requestParams());
   handleError(res, 201);
   return { userId };
 }

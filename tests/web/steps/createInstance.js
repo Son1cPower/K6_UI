@@ -18,7 +18,6 @@ const instance_UUID = uuidv4();
 
 // ========== STEP 1: Get Instance Types ==========  
   let res =getInstanceTypes(requestParams({
-    tags: { name: "Get instanceTypes_id" },
       query: {
         "cql.allRecords": "1",
         "limit": "2000"
@@ -39,7 +38,6 @@ const instance_UUID = uuidv4();
         "id": `${instance_UUID}`},
      
       requestParams({
-        tags: { name: "Create Instance" },
          checkBodyLength: false 
      })
     );
