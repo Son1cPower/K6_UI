@@ -7,14 +7,13 @@ import { createPatronUser } from '../steps/createPatronUser.js';
 import { createInstance } from '../steps/createInstance.js';
 import { createHolding } from '../steps/createHolding.js';
 import { createItem } from '../steps/createItem.js';
-import { getStartDate } from "../../../utils/helpers.js";
 
 
 export const options = {
   stages: STAGES.smoke,
   thresholds: THRESHOLD,
    tags: {
-    testName: `${__ENV.ENVIRONMENT}-MR_Login`,
+    testName: `${__ENV.ENVIRONMENT}-MR_flow_2`,
   },
 };
 

@@ -2032,7 +2032,7 @@
             "mode": "thresholds"
           },
           "custom": {
-            "align": "left",
+            "align": "auto",
             "cellOptions": {
               "type": "auto"
             },
@@ -2139,7 +2139,7 @@
           "refId": "A"
         }
       ],
-      "title": "Checks",
+      "title": "Checks detailed",
       "transformations": [
         {
           "id": "labelsToFields",
@@ -2167,7 +2167,7 @@
       "type": "table"
     }
   ],
-  "refresh": false,
+  "refresh": "",
   "schemaVersion": 38,
   "style": "dark",
   "tags": [],
@@ -2228,12 +2228,12 @@
       },
       {
         "current": {
-          "selected": false,
+          "selected": true,
           "text": [
-            "bugfest-MR_Login"
+            "bugfest-MR_flow_2"
           ],
           "value": [
-            "bugfest-MR_Login"
+            "bugfest-MR_flow_2"
           ]
         },
         "datasource": {
@@ -2256,13 +2256,13 @@
     ]
   },
   "time": {
-    "from": "2025-07-18T10:07:13.480Z",
-    "to": "2025-07-18T10:12:45.864Z"
+    "from": "now-2d",
+    "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "k6 metrics tags",
   "uid": "bd9dc993-69a2-4ce8-9ab8-243880c559d9",
-  "version": 1,
+  "version": 7,
   "weekStart": ""
 }
