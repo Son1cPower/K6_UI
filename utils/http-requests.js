@@ -1,6 +1,7 @@
 import http from 'k6/http';
 import { check } from 'k6';
 import { epDataSent, epDataRecv } from './networkMetrics.js';
+import { __CURRENT_GROUP__ } from './groupController.js';
 
 const DEFAULT_HEADERS = {
   'Content-Type': 'application/json',
@@ -22,7 +23,8 @@ function mergeParams(all = {}, method = 'GET', url = '') {
 
   const match = url.match(/^https?:\/\/[^/]+(\/[^?#]*)?/);
   const path = (match && match[1]) || url;
-  const finalName = explicitName || tags.name || `${method.toUpperCase()} ${path}`;
+  const baseName = explicitName || tags.name || `${method.toUpperCase()} ${path}`;
+  const finalName = __CURRENT_GROUP__ ? `${__CURRENT_GROUP__} - ${baseName}` : baseName;
   const finalTags = { ...tags, name: finalName };
 
   return {

@@ -1,4 +1,5 @@
 import { Trend } from "k6/metrics";
+export let __CURRENT_GROUP__ = null;
 
 // Custom metric to measure the total execution time of a group
 const groupDuration = new Trend("group_duration", true); // `true` ensures metrics are collected for each virtual user (VU)
@@ -12,12 +13,14 @@ const groupDuration = new Trend("group_duration", true); // `true` ensures metri
  */
 export function groupController(groupName, fn, iterations = 1) {
   const start = Date.now(); // Record the start time of the group
+   __CURRENT_GROUP__ = groupName;
 
   for (let i = 0; i < iterations; i++) {
     // console.log(`Iteration ${i + 1} of group: ${groupName}`); // Logging for debugging purposes
     fn(); // Execute the provided group's logic
   }
 
+  __CURRENT_GROUP__ = null;
   const duration = Date.now() - start; // Calculate the total execution time of the group
   groupDuration.add(duration, { group_name: groupName }); // Record the total time for the custom metric with the group name as a tag
 
