@@ -31,7 +31,6 @@ const pm = pageManager(page);
            });
 // sleep(1);
 
-
     await groupUI('002 - Open Sign In form', async () => {
                 await pm.mainToolbar.openSignInForm();
                  await assertVisible(pm.loginPage.signInHeaderLocator, 'Sign In page is visible'); 
@@ -58,6 +57,7 @@ const pm = pageManager(page);
       await pm.searchPage.searchByKeyword('BMW');
       await assertVisible(pm.searchPage.searchFilter('BMW'), 'Search was applied');  
     });
+    
 // sleep(1);
 
 
