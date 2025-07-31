@@ -10,7 +10,11 @@ export class HomePage extends BasePage{
   }
 
   async openHomePage() {
-      await this.goto(this.homePageUrl);
+  await Promise.all([
+    this.goto(this.homePageUrl),
+    this.waitForNavigation(),
+  ]);   
+  
   }
 
  get homePageHeaderLocator() {
