@@ -6,10 +6,8 @@ RUN go install go.k6.io/xk6/cmd/xk6@latest
 
 WORKDIR /build
 
-# Создаем минимальный go.mod с правильным module name
 RUN echo "module k6-custom" > go.mod
 
-# Теперь запускаем xk6 build
 RUN xk6 build \
   --with github.com/grafana/xk6-browser@latest \
   --with github.com/grafana/xk6-dashboard@latest \
