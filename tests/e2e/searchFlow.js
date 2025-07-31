@@ -8,8 +8,8 @@ export const options = {
   scenarios: {
     ui: {
       executor: 'shared-iterations',
-      vus: 1,
-      iterations: 1,
+      vus: 2,
+      iterations: 2,
       options: {
         browser: {
           type: 'chromium',
@@ -25,15 +25,17 @@ const pm = pageManager(page);
 
   try {
 
-
     await groupUI('001 - Open Homepage', async () => {
         await pm.homePage.openHomePage();
         await assertVisible(pm.homePage.homePageHeaderLocator, 'Home page loaded');
            });
 // sleep(1);
+
+
     await groupUI('002 - Open Sign In form', async () => {
                 await pm.mainToolbar.openSignInForm();
-                 await assertVisible(pm.loginPage.signInHeaderLocator, 'Sign In page is visible');   
+                 await assertVisible(pm.loginPage.signInHeaderLocator, 'Sign In page is visible'); 
+             
     });
 // sleep(1);
     await groupUI('003 - Login user', async () => {
@@ -43,8 +45,13 @@ const pm = pageManager(page);
     });
 // sleep(1);
     await groupUI('004 - Open Search page', async () => {
+
+
       await pm.mainToolbar.openSearch();
       await assertVisible(pm.searchPage.searchHeaderLocator, 'Search page is visible');
+
+
+
     });
 // sleep(1);
     await groupUI('005 - Perform Search', async () => {
