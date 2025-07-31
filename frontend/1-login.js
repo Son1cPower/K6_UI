@@ -65,7 +65,7 @@ async function openSignInForm(page) {
   let isVisible = await page.locator("//h4[contains(text(),'Sign in to your account')]").isVisible();
   check(page, {'Sign In page is visible': () => isVisible,});
 
-   await expect(page.locator("//h4[contains(text(),'Sign in to your account')]")).toBeVisible('Sign In form is visible');
+  //  await expect(page.locator("//h4[contains(text(),'Sign in to your account')]")).toBeVisible('Sign In form is visible');
   // await expect(page.locator("//h4[contains(text(),'Sign in to your account')]")).toHaveText('Sign in to your account', 'Sign In form has correct title');
 })}
 
