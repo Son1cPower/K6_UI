@@ -22,3 +22,15 @@ claud run
 
 
 
+FRONTEND
+ $env:K6_BROWSER_HEADLESS="false"; k6 run 1-login.js
+ docker compose run --rm -e K6_BROWSER_HEADLESS="false" k6 run frontend/1-login.js
+ docker compose run --rm k6 run frontend/1-login.js --out dashboard
+
+
+
+
+
+ $env:K6_BROWSER_HEADLESS="false"; k6 run tests/e2e/searchFlow.js
+ docker compose up -d
+ docker compose run --rm k6 run tests/e2e/searchFlow.js                      

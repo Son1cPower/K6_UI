@@ -5,11 +5,7 @@ datasources:
     type: influxdb
     access: proxy
     url: http://influxdb:8086
+    database: k6_ui
+    user: croco
+    password: password1
     isDefault: true
-    jsonData:
-      version: Flux
-      organization: k6io
-      defaultBucket: k6
-      tlsSkipVerify: true
-    secureJsonData:
-      token: my-super-secret-token
