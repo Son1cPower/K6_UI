@@ -321,6 +321,192 @@
             "uid": "P1D92AD4B6987FA03"
           },
           "hide": false,
+          "query": "SELECT\n  count(\"value\") AS \"Count\",\n  min(\"value\") AS \"Min\",\n  mean(\"value\") AS \"Avg\",\n  stddev(\"value\") AS \"Stddev\",\n  percentile(\"value\", 95) AS \"P95\",\n  percentile(\"value\", 99) AS \"P99\",\n  max(\"value\") AS \"Max\"\nFROM \"ui_request_duration\"\nWHERE $timeFilter\nGROUP BY \"name\"",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table"
+        }
+      ],
+      "title": "Panel Title",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true
+            },
+            "indexByName": {
+              "Avg": 3,
+              "Count": 2,
+              "Max": 8,
+              "Min": 7,
+              "P95": 4,
+              "P99": 5,
+              "Stddev": 6,
+              "Time": 0,
+              "name": 1
+            },
+            "renameByName": {
+              "Count": "",
+              "name": "URL"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P1D92AD4B6987FA03"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "left",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Avg"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "ms"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "P95"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "ms"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "P99"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "ms"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Min"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "ms"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Max"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "ms"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Stddev"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "ms"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "URL"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 863
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 30,
+        "w": 24,
+        "x": 0,
+        "y": 38
+      },
+      "id": 241,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "URL"
+          }
+        ]
+      },
+      "pluginVersion": "10.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P1D92AD4B6987FA03"
+          },
+          "hide": false,
           "query": "SELECT\n  count(\"value\") AS \"Count\",\n  min(\"value\") AS \"Min\",\n  mean(\"value\") AS \"Avg\",\n  stddev(\"value\") AS \"Stddev\",\n  percentile(\"value\", 95) AS \"P95\",\n  percentile(\"value\", 99) AS \"P99\",\n  max(\"value\") AS \"Max\"\nFROM \"browser_http_req_duration\"\nWHERE $timeFilter\nGROUP BY \"name\"",
           "rawQuery": true,
           "refId": "A",
@@ -442,7 +628,7 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 38
+        "y": 68
       },
       "id": 131,
       "options": {
@@ -513,7 +699,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 46
+        "y": 76
       },
       "id": 18,
       "panels": [],
@@ -544,7 +730,7 @@
         "h": 7,
         "w": 6,
         "x": 0,
-        "y": 47
+        "y": 77
       },
       "hiddenSeries": false,
       "id": 1,
@@ -664,7 +850,7 @@
         "h": 7,
         "w": 6,
         "x": 6,
-        "y": 47
+        "y": 77
       },
       "hiddenSeries": false,
       "id": 17,
@@ -785,7 +971,7 @@
         "h": 7,
         "w": 6,
         "x": 12,
-        "y": 47
+        "y": 77
       },
       "hiddenSeries": false,
       "id": 7,
@@ -910,7 +1096,7 @@
         "h": 7,
         "w": 6,
         "x": 18,
-        "y": 47
+        "y": 77
       },
       "hiddenSeries": false,
       "id": 10,
@@ -1036,7 +1222,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 54
+        "y": 84
       },
       "id": 19,
       "panels": [],
@@ -1096,7 +1282,7 @@
         "h": 3,
         "w": 4,
         "x": 0,
-        "y": 55
+        "y": 85
       },
       "id": 11,
       "links": [],
@@ -1207,7 +1393,7 @@
         "h": 3,
         "w": 4,
         "x": 4,
-        "y": 55
+        "y": 85
       },
       "id": 14,
       "links": [],
@@ -1318,7 +1504,7 @@
         "h": 3,
         "w": 4,
         "x": 8,
-        "y": 55
+        "y": 85
       },
       "id": 15,
       "links": [],
@@ -1429,7 +1615,7 @@
         "h": 3,
         "w": 4,
         "x": 12,
-        "y": 55
+        "y": 85
       },
       "id": 16,
       "links": [],
@@ -1540,7 +1726,7 @@
         "h": 3,
         "w": 4,
         "x": 16,
-        "y": 55
+        "y": 85
       },
       "id": 12,
       "links": [],
@@ -1651,7 +1837,7 @@
         "h": 3,
         "w": 4,
         "x": 20,
-        "y": 55
+        "y": 85
       },
       "id": 13,
       "links": [],
@@ -1735,7 +1921,7 @@
         "h": 7,
         "w": 12,
         "x": 0,
-        "y": 58
+        "y": 88
       },
       "height": "250px",
       "hiddenSeries": false,
@@ -2012,7 +2198,7 @@
         "h": 7,
         "w": 12,
         "x": 12,
-        "y": 58
+        "y": 88
       },
       "heatmap": {},
       "height": "250px",
@@ -2142,7 +2328,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 131
+        "y": 161
       },
       "id": 20,
       "panels": [],
@@ -2159,7 +2345,7 @@
       "type": "row"
     }
   ],
-  "refresh": "",
+  "refresh": false,
   "schemaVersion": 38,
   "style": "dark",
   "tags": [],
@@ -2229,8 +2415,8 @@
     ]
   },
   "time": {
-    "from": "2025-07-27T11:58:37.265Z",
-    "to": "2025-07-27T11:59:15.530Z"
+    "from": "2025-08-01T11:22:21.914Z",
+    "to": "2025-08-01T11:24:02.935Z"
   },
   "timepicker": {
     "refresh_intervals": [
@@ -2259,7 +2445,7 @@
   },
   "timezone": "browser",
   "title": "k6 UI TEST 2",
-  "uid": "rmzw2fyHz",
-  "version": 3,
+  "uid": "rmzw2fyHz1",
+  "version": 5,
   "weekStart": ""
 }

@@ -2,14 +2,15 @@ import { browser } from 'k6/browser';
 import { groupUI } from '../../utils/groupUI.js';
 import { pageManager } from '../../pages/pageManager.js';
 import {assertVisible} from '../../utils/assertVisible.js';
+import { attachRequestTagging } from '../../utils/attachRequestTagging.js';
 
 
 export const options = {
   scenarios: {
     ui: {
       executor: 'shared-iterations',
-      vus: 2,
-      iterations: 2,
+      vus: 1,
+      iterations: 1,
       options: {
         browser: {
           type: 'chromium',
@@ -21,6 +22,7 @@ export const options = {
 
 export default async function () {
 const page = await browser.newPage();
+attachRequestTagging(page);
 const pm = pageManager(page);
 
   try {
@@ -38,7 +40,7 @@ const pm = pageManager(page);
     });
 // sleep(1);
     await groupUI('003 - Login user', async () => {
-      await pm.loginPage.login('xxx', 'xxx');
+      await pm.loginPage.login('eefveeb@mailto.plus', 'Test@2025');
       const userLabel  = pm.mainToolbar.getUserLabelSelector('Testing');
       await assertVisible(userLabel, 'User is authorized');
     });
