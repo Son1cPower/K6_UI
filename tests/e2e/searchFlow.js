@@ -40,7 +40,7 @@ const pm = pageManager(page);
     });
 // sleep(1);
     await groupUI('003 - Login user', async () => {
-      await pm.loginPage.login('eefveeb@mailto.plus', 'Test@2025');
+      await pm.loginPage.login('xxx', 'xxx');
       const userLabel  = pm.mainToolbar.getUserLabelSelector('Testing');
       await assertVisible(userLabel, 'User is authorized');
     });
